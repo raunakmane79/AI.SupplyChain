@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChainIQ – AI Supply Chain Intelligence</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --accent: #0f766e; /* teal-ish */
+      --accent-soft: #ccfbf1;
+      --bg: #020617;
+      --card: #020617;
+      --card-border: #1e293b;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .pill-tab-active {
+      background: var(--accent-soft);
+      color: #0f172a;
+    }
+
+    .pill-tab-inactive {
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #e2e8f0;
+    }
+
+    .label-sm {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+    }
+
+    .input-base {
+      background: #020617;
+      border-radius: 0.75rem;
+      border: 1px solid #1f2937;
+      color: #e5e7eb;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .input-base:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.4);
+    }
+
+    .chip-muted {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 0.15rem 0.6rem;
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Top Nav -->
+  <header class="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-teal-500/20 border border-teal-400/60 flex items-center justify-center text-sm font-semibold text-teal-300">
+          IQ
+        </div>
+        <div>
+          <div class="text-sm font-semibold tracking-wide text-slate-100">
+            ChainIQ
+          </div>
+          <div class="text-xs text-slate-400 -mt-0.5">
+            AI Supply Chain Intelligence
+          </div>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex gap-2 text-xs">
+        <button
+          type="button"
+          data-tab="plan"
+          class="px-3 py-1.5 rounded-full pill-tab-active font-medium"
+        >
+          Plan
+        </button>
+        <button
+          type="button"
+          data-tab="source"
+          class="px-3 py-1.5 rounded-full pill-tab-inactive font-medium bg-transparent"
+        >
+          Source
+        </button>
+        <button
+          type="button"
+          data-tab="make"
+          class="px-3 py-1.5 rounded-full pill-tab-inactive font-medium bg-transparent"
+        >
+          Make
+        </button>
+        <button
+          type="button"
+          data-tab="deliver"
+          class="px-3 py-1.5 rounded-full pill-tab-inactive font-medium bg-transparent"
+        >
+          Deliver
+        </button>
+        <button
+          type="button"
+          data-tab="finance"
+          class="px-3 py-1.5 rounded-full pill-tab-inactive font-medium bg-transparent"
+        >
+          Finance
+        </button>
+      </nav>
+
+      <div class="hidden md:flex items-center gap-2 text-[0.7rem] text-slate-400">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#22c55e]"></span>
+        Demo environment
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <!-- PLAN SECTION -->
+    <section id="planSection" class="grid grid-cols-1 lg:grid-cols-[2fr,1.3fr] gap-4">
+      <!-- Left: Intro + Demand -->
+      <div class="space-y-4">
+        <div class="glass rounded-2xl p-4 md:p-5 border border-slate-800 shadow-lg shadow-teal-500/10">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="label-sm mb-1">Plan · Inventory</p>
+              <h1 class="text-xl md:text-2xl font-semibold text-slate-50">
+                Demand & Inventory Intelligence
+              </h1>
+              <p class="text-xs md:text-sm text-slate-400 mt-2 max-w-xl">
+                Upload your demand history and cost parameters. ChainIQ calculates a forecast, EOQ, safety stock,
+                and reorder point — then generates a short insight, like an AI assistant for your planning process.
+              </p>
+            </div>
+            <div class="hidden md:flex flex-col items-end gap-1 text-xs">
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">
+                • Stable Beta
+              </span>
+              <span class="text-slate-500">
+                v0.1 · Local demo
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inputs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Demand Input -->
+          <div class="glass rounded-2xl p-4 border border-slate-800">
+            <p class="label-sm mb-2">Demand history</p>
+            <label class="block text-xs text-slate-300 mb-1">
+              Period demand (comma-separated)
+            </label>
+            <textarea
+              id="demandInput"
+              class="input-base w-full h-20 resize-none"
+              placeholder="Example: 120, 135, 128, 140, 150"
+            ></textarea>
+            <p class="text-[0.7rem] text-slate-500 mt-1">
+              Used for<br>
+              • Simple moving-average forecast<br>
+              • Volatility analysis (std. deviation)
+            </p>
+          </div>
+
+          <!-- EOQ Inputs -->
+          <div class="glass rounded-2xl p-4 border border-slate-800 space-y-2">
+            <p class="label-sm mb-2">EOQ parameters</p>
+
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Annual demand (D)
+              </label>
+              <input
+                id="annualDemandInput"
+                type="number"
+                class="input-base w-full"
+                placeholder="e.g., 5000"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">
+                  Ordering cost (K)
+                </label>
+                <input
+                  id="orderingCostInput"
+                  type="number"
+                  class="input-base w-full"
+                  placeholder="e.g., 100"
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-300 mb-1">
+                  Holding cost per unit (h)
+                </label>
+                <input
+                  id="holdingCostInput"
+                  type="number"
+                  class="input-base w-full"
+                  placeholder="e.g., 5"
+                />
+              </div>
+            </div>
+
+            <p class="text-[0.7rem] text-slate-500">
+              EOQ = √( 2 · D · K / h )
+            </p>
+          </div>
+        </div>
+
+        <!-- Safety Stock / ROP -->
+        <div class="glass rounded-2xl p-4 border border-slate-800">
+          <p class="label-sm mb-2">Service level · Safety stock · Reorder point</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Service level Z
+              </label>
+              <input
+                id="zValueInput"
+                type="number"
+                step="0.01"
+                class="input-base w-full"
+                placeholder="e.g., 1.65 for 95%"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Demand std dev per period
+              </label>
+              <input
+                id="stdDevInput"
+                type="number"
+                step="0.01"
+                class="input-base w-full"
+                placeholder="Optional, else auto"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Lead time (periods)
+              </label>
+              <input
+                id="leadTimeInput"
+                type="number"
+                step="1"
+                class="input-base w-full"
+                placeholder="e.g., 3"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Avg demand per period (optional)
+              </label>
+              <input
+                id="avgDemandInput"
+                type="number"
+                step="0.01"
+                class="input-base w-full"
+                placeholder="Else from history"
+              />
+            </div>
+          </div>
+
+          <p class="text-[0.7rem] text-slate-500 mt-1">
+            Safety stock = Z · σ<sub>d</sub> · √L<br>
+            Reorder point = (avg demand · L) + safety stock
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: KPIs + AI Insight -->
+      <div class="space-y-4">
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Forecast</p>
+            <p class="text-[0.7rem] text-slate-400 mb-1">
+              Next period demand (moving average)
+            </p>
+            <p id="forecastValue" class="text-xl font-semibold text-teal-300">
+              –
+            </p>
+          </div>
+
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">EOQ</p>
+            <p class="text-[0.7rem] text-slate-400 mb-1">
+              Economic order quantity
+            </p>
+            <p id="eoqValue" class="text-xl font-semibold text-sky-300">
+              –
+            </p>
+          </div>
+
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Safety stock</p>
+            <p class="text-[0.7rem] text-slate-400 mb-1">
+              Buffer against demand & lead time uncertainty
+            </p>
+            <p id="safetyStockValue" class="text-xl font-semibold text-amber-300">
+              –
+            </p>
+          </div>
+
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Reorder point</p>
+            <p class="text-[0.7rem] text-slate-400 mb-1">
+              When to trigger next order
+            </p>
+            <p id="ropValue" class="text-xl font-semibold text-fuchsia-300">
+              –
+            </p>
+          </div>
+        </div>
+
+        <!-- AI Insight -->
+        <div class="glass rounded-2xl p-4 border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <p class="label-sm mb-1">ChainIQ Insight</p>
+              <p class="text-xs text-slate-300">
+                Lightweight rule-based logic for now — but structured like an AI copilot that explains your policy.
+              </p>
+            </div>
+            <button
+              id="analyzeBtn"
+              class="hidden md:inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-teal-500/20 border border-teal-400/50 text-teal-200 hover:bg-teal-500/30 transition"
+            >
+              ▷ Analyze
+            </button>
+          </div>
+
+          <div id="insightBox" class="text-xs text-slate-300 bg-slate-900/60 border border-slate-700 rounded-xl p-3 mt-1">
+            Enter demand history and parameters, then press <span class="font-semibold">Compute</span>. ChainIQ
+            will summarize how stable your demand is, how aggressive your EOQ is, and whether your safety stock looks lean or conservative.
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button
+            id="computeBtn"
+            class="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-teal-500 text-slate-950 text-sm font-semibold hover:bg-teal-400 transition shadow-lg shadow-teal-500/30"
+          >
+            ⚙️ Compute policy
+          </button>
+          <button
+            id="resetBtn"
+            class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl border border-slate-600 text-xs text-slate-300 hover:bg-slate-800 transition"
+          >
+            Reset
+          </button>
+        </div>
+
+        <!-- Methodology -->
+        <div class="glass rounded-2xl p-3 border border-slate-800">
+          <p class="label-sm mb-1">Methodology</p>
+          <ul class="text-[0.7rem] text-slate-400 space-y-1 list-disc list-inside">
+            <li>Forecast = simple moving average of last 3 periods (if available).</li>
+            <li>Volatility = standard deviation of provided demand history.</li>
+            <li>EOQ = √(2DK/h) using annual demand, ordering cost, and holding cost.</li>
+            <li>Safety stock and reorder point use classic continuous review assumptions.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOURCE SECTION -->
+    <section id="sourceSection" class="hidden space-y-4">
+      <!-- Hero -->
+      <div class="glass rounded-2xl p-4 md:p-5 border border-slate-800 shadow-lg shadow-emerald-500/10">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="label-sm mb-1">Source · Supplier Management</p>
+            <h2 class="text-xl md:text-2xl font-semibold text-slate-50">
+              Supplier Reliability & Risk Intelligence
+            </h2>
+            <p class="text-xs md:text-sm text-slate-400 mt-2 max-w-2xl">
+              Capture on-time delivery, defect rate, cost competitiveness, responsiveness, and ESG to compute a
+              composite Supplier Reliability Index (SRI). ChainIQ ranks suppliers and highlights risk hot spots.
+            </p>
+          </div>
+          <div class="hidden md:flex flex-col items-end gap-1 text-xs">
+            <span class="chip-muted">
+              Weighted multi-criteria model
+            </span>
+            <span class="text-slate-500">
+              SRI scale: 0–100
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.8fr,1.2fr] gap-4">
+        <!-- Supplier Inputs -->
+        <div class="glass rounded-2xl p-4 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <p class="label-sm">Supplier panel</p>
+            <span class="chip-muted">Higher SRI = lower supply risk</span>
+          </div>
+
+          <div class="text-[0.7rem] text-slate-400 mb-1">
+            <span class="font-semibold text-slate-200">Guidance:</span>
+            OTIF and defect rate in %, others on a 1–5 scale (5 = best).
+          </div>
+
+          <!-- Header row -->
+          <div class="grid grid-cols-[1.5fr,0.9fr,0.9fr,0.9fr,0.9fr,0.9fr] text-[0.65rem] text-slate-400 mb-1">
+            <span>Supplier</span>
+            <span class="text-center">OTIF %</span>
+            <span class="text-center">Defect %</span>
+            <span class="text-center">Cost 1–5</span>
+            <span class="text-center">Response 1–5</span>
+            <span class="text-center">ESG 1–5</span>
+          </div>
+
+          <div id="supplierTableBody" class="space-y-1.5">
+            <!-- Row template x5 -->
+            <div class="supplier-row grid grid-cols-[1.5fr,0.9fr,0.9fr,0.9fr,0.9fr,0.9fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" placeholder="Supplier A" value="Supplier A" />
+              <input data-field="otif" type="number" class="input-base text-[0.75rem] text-center" placeholder="95" value="95" />
+              <input data-field="defect" type="number" class="input-base text-[0.75rem] text-center" placeholder="1.5" value="1.5" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" placeholder="4" value="4" />
+              <input data-field="resp" type="number" class="input-base text-[0.75rem] text-center" placeholder="4" value="4" />
+              <input data-field="esg" type="number" class="input-base text-[0.75rem] text-center" placeholder="3" value="3" />
+            </div>
+            <div class="supplier-row grid grid-cols-[1.5fr,0.9fr,0.9fr,0.9fr,0.9fr,0.9fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" placeholder="Supplier B" value="Supplier B" />
+              <input data-field="otif" type="number" class="input-base text-[0.75rem] text-center" placeholder="88" value="88" />
+              <input data-field="defect" type="number" class="input-base text-[0.75rem] text-center" placeholder="2.5" value="2.5" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" placeholder="5" value="5" />
+              <input data-field="resp" type="number" class="input-base text-[0.75rem] text-center" placeholder="3" value="3" />
+              <input data-field="esg" type="number" class="input-base text-[0.75rem] text-center" placeholder="4" value="4" />
+            </div>
+            <div class="supplier-row grid grid-cols-[1.5fr,0.9fr,0.9fr,0.9fr,0.9fr,0.9fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" placeholder="Supplier C" value="Supplier C" />
+              <input data-field="otif" type="number" class="input-base text-[0.75rem] text-center" placeholder="92" value="92" />
+              <input data-field="defect" type="number" class="input-base text-[0.75rem] text-center" placeholder="3.0" value="3.0" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" placeholder="3" value="3" />
+              <input data-field="resp" type="number" class="input-base text-[0.75rem] text-center" placeholder="5" value="5" />
+              <input data-field="esg" type="number" class="input-base text-[0.75rem] text-center" placeholder="5" value="5" />
+            </div>
+            <div class="supplier-row grid grid-cols-[1.5fr,0.9fr,0.9fr,0.9fr,0.9fr,0.9fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" placeholder="Supplier D" />
+              <input data-field="otif" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="defect" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="resp" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="esg" type="number" class="input-base text-[0.75rem] text-center" />
+            </div>
+            <div class="supplier-row grid grid-cols-[1.5fr,0.9fr,0.9fr,0.9fr,0.9fr,0.9fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" placeholder="Supplier E" />
+              <input data-field="otif" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="defect" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="resp" type="number" class="input-base text-[0.75rem] text-center" />
+              <input data-field="esg" type="number" class="input-base text-[0.75rem] text-center" />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button
+              id="computeSuppliersBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-semibold hover:bg-emerald-400 transition shadow-lg shadow-emerald-500/30"
+            >
+              📊 Analyze suppliers
+            </button>
+            <button
+              id="resetSuppliersBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl border border-slate-600 text-[0.7rem] text-slate-300 hover:bg-slate-800 transition"
+            >
+              Reset table
+            </button>
+          </div>
+
+          <div class="text-[0.7rem] text-slate-500 mt-2">
+            SRI combines OTIF, defect rate (as quality), cost, responsiveness, and ESG. Weights are tunable, but this demo uses a
+            balanced risk viewpoint: delivery performance is most critical, followed by quality and commercial/ESG factors.
+          </div>
+        </div>
+
+        <!-- Supplier KPIs + Insight -->
+        <div class="space-y-3">
+          <!-- KPI cards -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Top supplier</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Highest Supplier Reliability Index
+              </p>
+              <p id="topSupplierName" class="text-sm font-semibold text-emerald-300">
+                –
+              </p>
+              <p id="topSupplierScore" class="text-xl font-semibold text-emerald-300">
+                –
+              </p>
+            </div>
+
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Portfolio overview</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Avg SRI · weakest link
+              </p>
+              <p id="avgSupplierScore" class="text-sm font-semibold text-sky-300">
+                Avg: –
+              </p>
+              <p id="weakSupplierLabel" class="text-[0.7rem] text-amber-300 mt-1">
+                Lowest: –
+              </p>
+            </div>
+          </div>
+
+          <!-- Insight box -->
+          <div class="glass rounded-2xl p-4 border border-slate-800 space-y-2">
+            <p class="label-sm mb-1">ChainIQ Sourcing Insight</p>
+            <div id="supplierInsightBox" class="text-xs text-slate-300 bg-slate-900/60 border border-slate-700 rounded-xl p-3">
+              Populate at least one supplier and click <span class="font-semibold">Analyze suppliers</span>. ChainIQ will create a
+              mini vendor scorecard narrative: who anchors your reliability, where quality or ESG drag the portfolio, and whether you
+              are over-relying on a single supplier.
+            </div>
+          </div>
+
+          <!-- Methodology -->
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Scoring model</p>
+            <ul class="text-[0.7rem] text-slate-400 space-y-1 list-disc list-inside">
+              <li>OTIF used directly on a 0–100 scale (delivery performance).</li>
+              <li>Defect % converted to quality score: quality = max(0, 100 − defect).</li>
+              <li>Cost, responsiveness, ESG converted from 1–5 to 0–100 scale.</li>
+              <li>
+                SRI = 0.4·OTIF + 0.2·Quality + 0.15·Cost + 0.15·Responsiveness + 0.1·ESG (weights configurable in a full version).
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAKE SECTION -->
+    <section id="makeSection" class="hidden space-y-4">
+      <div class="glass rounded-2xl p-4 md:p-5 border border-slate-800 shadow-lg shadow-sky-500/10">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="label-sm mb-1">Make · Production & OEE</p>
+            <h2 class="text-xl md:text-2xl font-semibold text-slate-50">
+              OEE & Bottleneck Diagnostics
+            </h2>
+            <p class="text-xs md:text-sm text-slate-400 mt-2 max-w-2xl">
+              Enter basic line data — planned time, downtime, output, and ideal cycle time — to compute Availability,
+              Performance, Quality, and OEE. ChainIQ interprets whether the primary loss driver is availability, speed, or quality.
+            </p>
+          </div>
+          <div class="hidden md:flex flex-col items-end gap-1 text-xs">
+            <span class="chip-muted">
+              Based on TPM OEE model
+            </span>
+            <span class="text-slate-500">
+              OEE target: 85% "world class"
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.6fr,1.4fr] gap-4">
+        <!-- Inputs -->
+        <div class="glass rounded-2xl p-4 border border-slate-800 space-y-3">
+          <p class="label-sm mb-2">Line inputs</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Planned production time (minutes)
+              </label>
+              <input
+                id="plannedTimeInput"
+                type="number"
+                class="input-base w-full"
+                placeholder="e.g., 480"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Unplanned downtime (minutes)
+              </label>
+              <input
+                id="downtimeInput"
+                type="number"
+                class="input-base w-full"
+                placeholder="e.g., 60"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Total units produced
+              </label>
+              <input
+                id="totalCountInput"
+                type="number"
+                class="input-base w-full"
+                placeholder="e.g., 900"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Good units (non-defective)
+              </label>
+              <input
+                id="goodCountInput"
+                type="number"
+                class="input-base w-full"
+                placeholder="e.g., 870"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Ideal cycle time (min/unit)
+              </label>
+              <input
+                id="idealCycleInput"
+                type="number"
+                step="0.0001"
+                class="input-base w-full"
+                placeholder="e.g., 0.5"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-2">
+            <button
+              id="computeOeeBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-sky-500 text-slate-950 text-xs font-semibold hover:bg-sky-400 transition shadow-lg shadow-sky-500/30"
+            >
+              🏭 Compute OEE
+            </button>
+            <button
+              id="resetOeeBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl border border-slate-600 text-[0.7rem] text-slate-300 hover:bg-slate-800 transition"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div class="text-[0.7rem] text-slate-500 mt-1">
+            Definitions: Availability = operating time / planned time; Performance = (ideal cycle · total count) / operating time;
+            Quality = good / total; OEE = A × P × Q.
+          </div>
+        </div>
+
+        <!-- OEE KPIs + Insight -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Availability</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Operating time vs planned
+              </p>
+              <p id="availabilityValue" class="text-xl font-semibold text-emerald-300">
+                –
+              </p>
+            </div>
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Performance</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Speed vs ideal
+              </p>
+              <p id="performanceValue" class="text-xl font-semibold text-sky-300">
+                –
+              </p>
+            </div>
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Quality</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Good units / total
+              </p>
+              <p id="qualityValue" class="text-xl font-semibold text-amber-300">
+                –
+              </p>
+            </div>
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">OEE</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Overall equipment effectiveness
+              </p>
+              <p id="oeeValue" class="text-xl font-semibold text-fuchsia-300">
+                –
+              </p>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-4 border border-slate-800 space-y-2">
+            <p class="label-sm mb-1">ChainIQ Make Insight</p>
+            <div id="oeeInsightBox" class="text-xs text-slate-300 bg-slate-900/60 border border-slate-700 rounded-xl p-3">
+              Feed in your line data and ChainIQ will decompose OEE into its three loss buckets, highlighting whether downtime,
+              speed loss, or scrap is your main improvement opportunity.
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Interpretation guide</p>
+            <ul class="text-[0.7rem] text-slate-400 space-y-1 list-disc list-inside">
+              <li>World-class OEE is often cited around 85% (A≈90%, P≈95%, Q≈99%).</li>
+              <li>
+                Availability &lt; 85% usually implies changeover, breakdown, or setup losses worth attacking with TPM and SMED.
+              </li>
+              <li>Performance &lt; 90% suggests micro-stops, slow cycles, or speed derating.</li>
+              <li>Quality &lt; 99% points to scrap, rework, and yield issues at the bottleneck.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DELIVER SECTION -->
+    <section id="deliverSection" class="hidden space-y-4">
+      <div class="glass rounded-2xl p-4 md:p-5 border border-slate-800 shadow-lg shadow-amber-500/10">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="label-sm mb-1">Deliver · Transport Strategy</p>
+            <h2 class="text-xl md:text-2xl font-semibold text-slate-50">
+              Mode Trade-offs & Cost-to-Serve
+            </h2>
+            <p class="text-xs md:text-sm text-slate-400 mt-2 max-w-2xl">
+              Compare different transport modes (e.g., road, air, ocean) on cost, lead time, and reliability. ChainIQ scores
+              each mode and recommends a primary option based on your priorities.
+            </p>
+          </div>
+          <div class="hidden md:flex flex-col items-end gap-1 text-xs">
+            <span class="chip-muted">Cost vs speed vs reliability</span>
+            <span class="text-slate-500">Mode score: 0–100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.8fr,1.2fr] gap-4">
+        <!-- Transport Inputs -->
+        <div class="glass rounded-2xl p-4 border border-slate-800 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <p class="label-sm">Transport modes</p>
+            <span class="chip-muted">Tunable weights in real deployment</span>
+          </div>
+
+          <div class="text-[0.7rem] text-slate-400 mb-1">
+            <span class="font-semibold text-slate-200">Guidance:</span>
+            Cost per unit (any currency), lead time in days, reliability 0–100 (on-time %).
+          </div>
+
+          <div class="grid grid-cols-[1.3fr,1fr,1fr,1fr] text-[0.65rem] text-slate-400 mb-1">
+            <span>Mode</span>
+            <span class="text-center">Cost / unit</span>
+            <span class="text-center">Lead time (days)</span>
+            <span class="text-center">Reliability %</span>
+          </div>
+
+          <div id="transportTableBody" class="space-y-1.5">
+            <div class="mode-row grid grid-cols-[1.3fr,1fr,1fr,1fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" value="Road" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" value="4" />
+              <input data-field="lead" type="number" class="input-base text-[0.75rem] text-center" value="3" />
+              <input data-field="rel" type="number" class="input-base text-[0.75rem] text-center" value="92" />
+            </div>
+            <div class="mode-row grid grid-cols-[1.3fr,1fr,1fr,1fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" value="Air" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" value="9" />
+              <input data-field="lead" type="number" class="input-base text-[0.75rem] text-center" value="1" />
+              <input data-field="rel" type="number" class="input-base text-[0.75rem] text-center" value="97" />
+            </div>
+            <div class="mode-row grid grid-cols-[1.3fr,1fr,1fr,1fr] gap-1">
+              <input data-field="name" class="input-base text-[0.75rem]" value="Ocean" />
+              <input data-field="cost" type="number" class="input-base text-[0.75rem] text-center" value="2" />
+              <input data-field="lead" type="number" class="input-base text-[0.75rem] text-center" value="18" />
+              <input data-field="rel" type="number" class="input-base text-[0.75rem] text-center" value="85" />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-3">
+            <button
+              id="computeTransportBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-amber-500 text-slate-950 text-xs font-semibold hover:bg-amber-400 transition shadow-lg shadow-amber-500/30"
+            >
+              🚚 Analyze modes
+            </button>
+            <button
+              id="resetTransportBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl border border-slate-600 text-[0.7rem] text-slate-300 hover:bg-slate-800 transition"
+            >
+              Reset table
+            </button>
+          </div>
+
+          <div class="text-[0.7rem] text-slate-500 mt-1">
+            The demo uses a simple utility function that rewards low cost and lead time but heavily values reliability for
+            service-critical flows.
+          </div>
+        </div>
+
+        <!-- Deliver KPIs + Insight -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Recommended mode</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Highest transport utility score
+              </p>
+              <p id="bestModeName" class="text-sm font-semibold text-amber-300">
+                –
+              </p>
+              <p id="bestModeScore" class="text-xl font-semibold text-amber-300">
+                –
+              </p>
+            </div>
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Portfolio view</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Avg score · cost span
+              </p>
+              <p id="avgModeScore" class="text-sm font-semibold text-sky-300">
+                Avg: –
+              </p>
+              <p id="modeCostSpan" class="text-[0.7rem] text-emerald-300 mt-1">
+                Cost range: –
+              </p>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-4 border border-slate-800 space-y-2">
+            <p class="label-sm mb-1">ChainIQ Deliver Insight</p>
+            <div id="deliverInsightBox" class="text-xs text-slate-300 bg-slate-900/60 border border-slate-700 rounded-xl p-3">
+              Populate cost, lead time, and reliability for each mode and run the analysis. ChainIQ will comment on express vs
+              economical choices and the risk of relying solely on one mode.
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Scoring model</p>
+            <ul class="text-[0.7rem] text-slate-400 space-y-1 list-disc list-inside">
+              <li>Costs and lead times are normalized between best and worst value.</li>
+              <li>Lower cost and shorter lead time are rewarded.</li>
+              <li>Reliability is used directly as a % service metric.</li>
+              <li>Mode score ~ 0.35·CostScore + 0.25·LeadScore + 0.4·ReliabilityScore.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINANCE SECTION -->
+    <section id="financeSection" class="hidden space-y-4">
+      <div class="glass rounded-2xl p-4 md:p-5 border border-slate-800 shadow-lg shadow-emerald-500/10">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="label-sm mb-1">Finance · Profitability</p>
+            <h2 class="text-xl md:text-2xl font-semibold text-slate-50">
+              Unit Economics & Profit Simulator
+            </h2>
+            <p class="text-xs md:text-sm text-slate-400 mt-2 max-w-2xl">
+              Model revenue, cost, and profit at SKU or portfolio level. ChainIQ computes unit margin, total profit,
+              margin %, and break-even volume.
+            </p>
+          </div>
+          <div class="hidden md:flex flex-col items-end gap-1 text-xs">
+            <span class="chip-muted">Link supply chain to P&amp;L</span>
+            <span class="text-slate-500">Margin focus: contribution per unit</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1.5fr,1.5fr] gap-4">
+        <!-- Inputs -->
+        <div class="glass rounded-2xl p-4 border border-slate-800 space-y-3">
+          <p class="label-sm mb-2">Commercial inputs</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Selling price per unit
+              </label>
+              <input
+                id="priceInput"
+                type="number"
+                step="0.01"
+                class="input-base w-full"
+                placeholder="e.g., 25"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Variable cost per unit
+              </label>
+              <input
+                id="varCostInput"
+                type="number"
+                step="0.01"
+                class="input-base w-full"
+                placeholder="e.g., 17"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Fixed cost (period)
+              </label>
+              <input
+                id="fixedCostInput"
+                type="number"
+                step="0.01"
+                class="input-base w-full"
+                placeholder="e.g., 50000"
+              />
+            </div>
+            <div>
+              <label class="block text-xs text-slate-300 mb-1">
+                Demand (units per period)
+              </label>
+              <input
+                id="demandUnitsInput"
+                type="number"
+                class="input-base w-full"
+                placeholder="e.g., 6000"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 mt-2">
+            <button
+              id="computeFinanceBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-emerald-500 text-slate-950 text-xs font-semibold hover:bg-emerald-400 transition shadow-lg shadow-emerald-500/30"
+            >
+              💰 Compute profit
+            </button>
+            <button
+              id="resetFinanceBtn"
+              class="inline-flex items-center justify-center gap-1 px-3 py-2 rounded-xl border border-slate-600 text-[0.7rem] text-slate-300 hover:bg-slate-800 transition"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div class="text-[0.7rem] text-slate-500 mt-1">
+            Classic contribution model: Profit = (Price − Variable cost) × Volume − Fixed cost. Break-even volume = Fixed cost / Unit margin.
+          </div>
+        </div>
+
+        <!-- Finance KPIs + Insight -->
+        <div class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Unit margin</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Contribution per unit
+              </p>
+              <p id="unitMarginValue" class="text-xl font-semibold text-emerald-300">
+                –
+              </p>
+            </div>
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Margin %</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Relative to price
+              </p>
+              <p id="marginPercentValue" class="text-xl font-semibold text-sky-300">
+                –
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Total profit</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Period profit
+              </p>
+              <p id="totalProfitValue" class="text-xl font-semibold text-emerald-300">
+                –
+              </p>
+            </div>
+            <div class="glass rounded-2xl p-3 border border-slate-800">
+              <p class="label-sm mb-1">Break-even volume</p>
+              <p class="text-[0.7rem] text-slate-400 mb-1">
+                Units to cover fixed cost
+              </p>
+              <p id="breakevenValue" class="text-xl font-semibold text-amber-300">
+                –
+              </p>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-4 border border-slate-800 space-y-2">
+            <p class="label-sm mb-1">ChainIQ Finance Insight</p>
+            <div id="financeInsightBox" class="text-xs text-slate-300 bg-slate-900/60 border border-slate-700 rounded-xl p-3">
+              Once you compute the profit model, ChainIQ will comment on whether your product is margin-rich, how sensitive
+              profit is to volume, and whether fixed cost looks aggressive relative to contribution.
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-3 border border-slate-800">
+            <p class="label-sm mb-1">Interpretation guide</p>
+            <ul class="text-[0.7rem] text-slate-400 space-y-1 list-disc list-inside">
+              <li>Higher unit margin allows more room for supply chain variability before eroding profit.</li>
+              <li>Break-even volume is a useful anchor for capacity and demand planning.</li>
+              <li>Low margin % products are more sensitive to delays, expedites, and quality problems.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /* ---------- Shared helpers ---------- */
+    function mean(arr) {
+      if (!arr.length) return null;
+      return arr.reduce((a, b) => a + b, 0) / arr.length;
+    }
+
+    function stdDev(arr) {
+      if (arr.length < 2) return 0;
+      const m = mean(arr);
+      const variance = arr.reduce((acc, v) => acc + Math.pow(v - m, 2), 0) / (arr.length - 1);
+      return Math.sqrt(variance);
+    }
+
+    /* ---------- Plan tab logic ---------- */
+    function parseDemand() {
+      const raw = document.getElementById("demandInput").value;
+      if (!raw.trim()) return [];
+      return raw
+        .split(",")
+        .map(v => parseFloat(v.trim()))
+        .filter(v => !isNaN(v) && v >= 0);
+    }
+
+    function movingAverageForecast(arr, windowSize = 3) {
+      if (!arr.length) return null;
+      if (arr.length < windowSize) return mean(arr);
+      const slice = arr.slice(-windowSize);
+      return mean(slice);
+    }
+
+    function computeAll() {
+      const demandArr = parseDemand();
+
+      // Forecast
+      const forecast = movingAverageForecast(demandArr);
+      const forecastEl = document.getElementById("forecastValue");
+      forecastEl.textContent = forecast ? forecast.toFixed(1) : "–";
+
+      // EOQ
+      const D = parseFloat(document.getElementById("annualDemandInput").value);
+      const K = parseFloat(document.getElementById("orderingCostInput").value);
+      const h = parseFloat(document.getElementById("holdingCostInput").value);
+      let eoq = null;
+
+      if (!isNaN(D) && !isNaN(K) && !isNaN(h) && D > 0 && K > 0 && h > 0) {
+        eoq = Math.sqrt((2 * D * K) / h);
+      }
+
+      const eoqEl = document.getElementById("eoqValue");
+      eoqEl.textContent = eoq ? eoq.toFixed(1) : "–";
+
+      // Safety stock & ROP
+      const zVal = parseFloat(document.getElementById("zValueInput").value);
+      const stdDevInputVal = parseFloat(document.getElementById("stdDevInput").value);
+      const leadTime = parseFloat(document.getElementById("leadTimeInput").value);
+      const avgDemandInputVal = parseFloat(document.getElementById("avgDemandInput").value);
+
+      let sigma = 0;
+      const demandStd = demandArr.length > 1 ? stdDev(demandArr) : 0;
+      if (!isNaN(stdDevInputVal) && stdDevInputVal > 0) {
+        sigma = stdDevInputVal;
+      } else {
+        sigma = demandStd;
+      }
+
+      const avgDemand =
+        !isNaN(avgDemandInputVal) && avgDemandInputVal > 0
+          ? avgDemandInputVal
+          : demandArr.length
+          ? mean(demandArr)
+          : null;
+
+      let safetyStock = null;
+      let rop = null;
+
+      if (!isNaN(zVal) && zVal > 0 && sigma > 0 && !isNaN(leadTime) && leadTime > 0) {
+        safetyStock = zVal * sigma * Math.sqrt(leadTime);
+      }
+
+      if (avgDemand !== null && !isNaN(leadTime) && leadTime > 0) {
+        const baseDemandDuringLT = avgDemand * leadTime;
+        rop = baseDemandDuringLT + (safetyStock || 0);
+      }
+
+      const ssEl = document.getElementById("safetyStockValue");
+      const ropEl = document.getElementById("ropValue");
+
+      ssEl.textContent = safetyStock ? safetyStock.toFixed(1) : "–";
+      ropEl.textContent = rop ? rop.toFixed(1) : "–";
+
+      // Generate insight
+      generateInsight({
+        demandArr,
+        forecast,
+        eoq,
+        safetyStock,
+        rop,
+        avgDemand,
+        sigma,
+      });
+    }
+
+    function generateInsight({ demandArr, forecast, eoq, safetyStock, rop, avgDemand, sigma }) {
+      const box = document.getElementById("insightBox");
+
+      if (!demandArr.length && !eoq && !safetyStock && !rop) {
+        box.textContent =
+          "No parameters yet — add demand history and cost data, then compute. ChainIQ will act like a junior planner: it summarizes demand stability, EOQ aggressiveness, and buffer policy.";
+        return;
+      }
+
+      const parts = [];
+
+      // Demand stability
+      if (demandArr.length) {
+        const dMean = mean(demandArr);
+        const cv = dMean ? sigma / dMean : 0;
+        if (cv < 0.1) {
+          parts.push("Demand looks very stable (low coefficient of variation). This is ideal for lean inventory policies.");
+        } else if (cv < 0.25) {
+          parts.push("Demand shows moderate variability. A balanced safety stock policy is appropriate.");
+        } else {
+          parts.push(
+            "Demand is highly volatile. Consider higher safety stock or shorter review periods to avoid stockouts during spikes."
+          );
+        }
+      } else {
+        parts.push("No demand history provided yet, so volatility cannot be evaluated.");
+      }
+
+      // EOQ interpretation
+      if (eoq && avgDemand) {
+        const annualizedAvg = avgDemand * 12; // assumption: period ≈ month
+        const cycles = annualizedAvg > 0 ? annualizedAvg / eoq : null;
+        if (cycles && cycles > 48) {
+          parts.push(
+            "Your EOQ is relatively small compared to demand, leading to frequent ordering and potentially higher transaction cost."
+          );
+        } else if (cycles && cycles < 6) {
+          parts.push(
+            "Your EOQ is large, which reduces ordering frequency but may increase holding cost and risk of obsolescence."
+          );
+        } else {
+          parts.push(
+            "EOQ is reasonably balanced relative to demand, indicating a good trade-off between ordering and holding costs."
+          );
+        }
+      } else if (!eoq) {
+        parts.push("EOQ could not be computed — check that annual demand, ordering cost, and holding cost are all positive.");
+      }
+
+      // Safety stock / ROP interpretation
+      if (safetyStock && avgDemand && rop) {
+        const leadTime = parseFloat(document.getElementById("leadTimeInput").value || "0");
+        const demandDuringLT = avgDemand * leadTime;
+        const bufferRatio = demandDuringLT > 0 ? safetyStock / demandDuringLT : 0;
+
+        if (bufferRatio < 0.1) {
+          parts.push(
+            "Safety stock is quite lean relative to expected demand during lead time; this is efficient but may increase stockout risk during spikes."
+          );
+        } else if (bufferRatio < 0.4) {
+          parts.push("Safety stock is moderate. This should smooth typical variability without tying up excessive working capital.");
+        } else {
+          parts.push(
+            "Safety stock is very conservative relative to demand during lead time. Service level will be high, but carrying costs may also be significant."
+          );
+        }
+
+        parts.push(
+          "Reorder point combines expected demand during lead time plus the safety buffer, aligning with a continuous review (Q,R) policy."
+        );
+      } else if (!safetyStock && !rop) {
+        parts.push(
+          "Safety stock and reorder point were not fully computed — verify Z, lead time, and either demand history or average demand."
+        );
+      }
+
+      box.textContent = parts.join(" ");
+    }
+
+    function resetAll() {
+      document.getElementById("demandInput").value = "";
+      document.getElementById("annualDemandInput").value = "";
+      document.getElementById("orderingCostInput").value = "";
+      document.getElementById("holdingCostInput").value = "";
+      document.getElementById("zValueInput").value = "";
+      document.getElementById("stdDevInput").value = "";
+      document.getElementById("leadTimeInput").value = "";
+      document.getElementById("avgDemandInput").value = "";
+
+      document.getElementById("forecastValue").textContent = "–";
+      document.getElementById("eoqValue").textContent = "–";
+      document.getElementById("safetyStockValue").textContent = "–";
+      document.getElementById("ropValue").textContent = "–";
+
+      document.getElementById("insightBox").textContent =
+        "Enter demand history and parameters, then press Compute. ChainIQ will summarize how stable your demand is, how aggressive your EOQ is, and whether your safety stock looks lean or conservative.";
+    }
+
+    /* ---------- Source tab logic ---------- */
+    function parseSuppliers() {
+      const rows = document.querySelectorAll(".supplier-row");
+      const suppliers = [];
+
+      rows.forEach(row => {
+        const name = row.querySelector('[data-field="name"]').value.trim();
+        const otif = parseFloat(row.querySelector('[data-field="otif"]').value);
+        const defect = parseFloat(row.querySelector('[data-field="defect"]').value);
+        const cost = parseFloat(row.querySelector('[data-field="cost"]').value);
+        const resp = parseFloat(row.querySelector('[data-field="resp"]').value);
+        const esg = parseFloat(row.querySelector('[data-field="esg"]').value);
+
+        if (!name) return; // ignore empty rows
+        if (isNaN(otif) || isNaN(defect) || isNaN(cost) || isNaN(resp) || isNaN(esg)) return;
+
+        suppliers.push({ name, otif, defect, cost, resp, esg });
+      });
+
+      return suppliers;
+    }
+
+    function scoreSuppliers() {
+      const data = parseSuppliers();
+      const insightBox = document.getElementById("supplierInsightBox");
+      const topNameEl = document.getElementById("topSupplierName");
+      const topScoreEl = document.getElementById("topSupplierScore");
+      const avgScoreEl = document.getElementById("avgSupplierScore");
+      const weakLabelEl = document.getElementById("weakSupplierLabel");
+
+      if (!data.length) {
+        topNameEl.textContent = "–";
+        topScoreEl.textContent = "–";
+        avgScoreEl.textContent = "Avg: –";
+        weakLabelEl.textContent = "Lowest: –";
+        insightBox.textContent =
+          "No valid supplier data yet. Fill at least one row with OTIF, defect %, and 1–5 scores, then run Analyze suppliers.";
+        return;
+      }
+
+      const scored = data.map(s => {
+        const otifScore = Math.min(Math.max(s.otif, 0), 100);
+        const qualityScore = Math.max(0, 100 - Math.max(s.defect, 0)); // lower defect => higher quality
+        const scale15 = v => Math.min(Math.max(v, 1), 5);
+        const costScore = ((scale15(s.cost) - 1) / 4) * 100;
+        const respScore = ((scale15(s.resp) - 1) / 4) * 100;
+        const esgScore = ((scale15(s.esg) - 1) / 4) * 100;
+
+        const sri =
+          0.4 * otifScore +
+          0.2 * qualityScore +
+          0.15 * costScore +
+          0.15 * respScore +
+          0.1 * esgScore;
+
+        return { ...s, otifScore, qualityScore, costScore, respScore, esgScore, sri };
+      });
+
+      scored.sort((a, b) => b.sri - a.sri);
+
+      const top = scored[0];
+      const bottom = scored[scored.length - 1];
+      const avgSri = mean(scored.map(s => s.sri));
+
+      topNameEl.textContent = top.name;
+      topScoreEl.textContent = top.sri.toFixed(1);
+      avgScoreEl.textContent = `Avg: ${avgSri.toFixed(1)}`;
+      weakLabelEl.textContent = `Lowest: ${bottom.name} (${bottom.sri.toFixed(1)})`;
+
+      // Narrative
+      const parts = [];
+
+      parts.push(
+        `Based on the current weights, ${top.name} emerges as your most reliable supplier with an SRI of approximately ${top.sri.toFixed(
+          1
+        )}, driven primarily by on-time delivery and quality performance.`
+      );
+
+      if (scored.length > 1) {
+        const gap = top.sri - bottom.sri;
+        parts.push(
+          `${bottom.name} is currently the weakest link at around ${bottom.sri.toFixed(
+            1
+          )}, creating a reliability gap of about ${gap.toFixed(
+            1
+          )} points between the best and worst performers.`
+        );
+      }
+
+      const qualityLaggers = scored.filter(s => s.qualityScore < 85);
+      if (qualityLaggers.length) {
+        const names = qualityLaggers.map(s => s.name).join(", ");
+        parts.push(
+          `Quality risk: ${names} show noticeable quality drag (higher defect rates) and may require tighter incoming inspection or corrective actions.`
+        );
+      }
+
+      const otifLaggers = scored.filter(s => s.otifScore < 90);
+      if (otifLaggers.length) {
+        const names = otifLaggers.map(s => s.name).join(", ");
+        parts.push(
+          `Delivery performance: ${names} fall below a 90% OTIF threshold. These suppliers are candidates for lead time buffers, dual sourcing, or contractual service-level clauses.`
+        );
+      }
+
+      const strongESG = scored.filter(s => s.esgScore >= 80);
+      if (strongESG.length) {
+        const names = strongESG.map(s => s.name).join(", ");
+        parts.push(
+          `On the ESG side, ${names} are well-positioned and could be preferred partners if your strategy emphasizes sustainability and compliance.`
+        );
+      }
+
+      parts.push(
+        "In a full deployment, these scores would feed into sourcing strategies such as dual-sourcing rules, allocation guidelines, and preferred supplier lists tied to specific categories or regions."
+      );
+
+      insightBox.textContent = parts.join(" ");
+    }
+
+    function resetSuppliers() {
+      const rows = document.querySelectorAll(".supplier-row");
+      rows.forEach((row, idx) => {
+        row.querySelector('[data-field="name"]').value =
+          idx === 0 ? "Supplier A" : idx === 1 ? "Supplier B" : idx === 2 ? "Supplier C" : "";
+        row.querySelector('[data-field="otif"]').value = idx === 0 ? "95" : idx === 1 ? "88" : idx === 2 ? "92" : "";
+        row.querySelector('[data-field="defect"]').value = idx === 0 ? "1.5" : idx === 1 ? "2.5" : idx === 2 ? "3.0" : "";
+        row.querySelector('[data-field="cost"]').value = idx === 0 ? "4" : idx === 1 ? "5" : idx === 2 ? "3" : "";
+        row.querySelector('[data-field="resp"]').value = idx === 0 ? "4" : idx === 1 ? "3" : idx === 2 ? "5" : "";
+        row.querySelector('[data-field="esg"]').value = idx === 0 ? "3" : idx === 1 ? "4" : idx === 2 ? "5" : "";
+      });
+
+      document.getElementById("topSupplierName").textContent = "–";
+      document.getElementById("topSupplierScore").textContent = "–";
+      document.getElementById("avgSupplierScore").textContent = "Avg: –";
+      document.getElementById("weakSupplierLabel").textContent = "Lowest: –";
+      document.getElementById("supplierInsightBox").textContent =
+        "Populate at least one supplier and click Analyze suppliers. ChainIQ will create a mini vendor scorecard narrative: who anchors your reliability, where quality or ESG drag the portfolio, and whether you are over-relying on a single supplier.";
+    }
+
+    /* ---------- Make tab logic (OEE) ---------- */
+    function computeOee() {
+      const planned = parseFloat(document.getElementById("plannedTimeInput").value);
+      const downtime = parseFloat(document.getElementById("downtimeInput").value);
+      const totalCount = parseFloat(document.getElementById("totalCountInput").value);
+      const goodCount = parseFloat(document.getElementById("goodCountInput").value);
+      const idealCycle = parseFloat(document.getElementById("idealCycleInput").value);
+
+      const availabilityEl = document.getElementById("availabilityValue");
+      const performanceEl = document.getElementById("performanceValue");
+      const qualityEl = document.getElementById("qualityValue");
+      const oeeEl = document.getElementById("oeeValue");
+      const insightBox = document.getElementById("oeeInsightBox");
+
+      if (isNaN(planned) || planned <= 0) {
+        availabilityEl.textContent = performanceEl.textContent = qualityEl.textContent = oeeEl.textContent = "–";
+        insightBox.textContent = "Planned production time must be a positive value to compute OEE.";
+        return;
+      }
+
+      const dt = isNaN(downtime) || downtime < 0 ? 0 : downtime;
+      const operating = Math.max(planned - dt, 0);
+
+      const availability = planned > 0 ? operating / planned : 0;
+
+      let performance = null;
+      if (!isNaN(idealCycle) && idealCycle > 0 && operating > 0 && !isNaN(totalCount) && totalCount > 0) {
+        performance = (idealCycle * totalCount) / operating;
+      }
+
+      let quality = null;
+      if (!isNaN(totalCount) && totalCount > 0 && !isNaN(goodCount) && goodCount >= 0) {
+        quality = goodCount / totalCount;
+      }
+
+      let oee = null;
+      if (availability !== null && performance !== null && quality !== null) {
+        oee = availability * performance * quality;
+      }
+
+      const fmtPct = v => (v !== null && !isNaN(v) ? (v * 100).toFixed(1) + "%" : "–");
+
+      availabilityEl.textContent = fmtPct(availability);
+      performanceEl.textContent = fmtPct(performance);
+      qualityEl.textContent = fmtPct(quality);
+      oeeEl.textContent = fmtPct(oee);
+
+      // Insight
+      if (!oee) {
+        insightBox.textContent =
+          "Some parameters are missing (cycle time, counts, or downtime). Provide all fields to decompose OEE properly.";
+        return;
+      }
+
+      const parts = [];
+      parts.push(`Overall OEE is about ${(oee * 100).toFixed(1)}%, giving a quick sense of how much of your scheduled time is truly productive.`);
+
+      const buckets = [
+        { name: "Availability", value: availability },
+        { name: "Performance", value: performance },
+        { name: "Quality", value: quality },
+      ].filter(b => b.value !== null && !isNaN(b.value));
+
+      const sorted = buckets.slice().sort((a, b) => a.value - b.value);
+      if (sorted.length) {
+        const weakest = sorted[0];
+        parts.push(
+          `${weakest.name} is currently the weakest leg of OEE. This is the first place to hunt for losses (e.g., changeovers, breakdowns, micro-stops, or defects).`
+        );
+      }
+
+      if (availability < 0.85) {
+        parts.push("Availability below ~85% suggests downtime and changeover losses are significant — TPM, SMED, and maintenance planning may be high-impact levers.");
+      }
+      if (performance !== null && performance < 0.9) {
+        parts.push("Performance losses indicate the line is not running at its ideal speed; investigate micro-stops, speed derating, or bottleneck balancing.");
+      }
+      if (quality !== null && quality < 0.99) {
+        parts.push("Quality below 99% at the bottleneck can be very expensive; root-cause scrap and rework to recover capacity and margin.");
+      }
+
+      insightBox.textContent = parts.join(" ");
+    }
+
+    function resetOee() {
+      document.getElementById("plannedTimeInput").value = "";
+      document.getElementById("downtimeInput").value = "";
+      document.getElementById("totalCountInput").value = "";
+      document.getElementById("goodCountInput").value = "";
+      document.getElementById("idealCycleInput").value = "";
+
+      document.getElementById("availabilityValue").textContent = "–";
+      document.getElementById("performanceValue").textContent = "–";
+      document.getElementById("qualityValue").textContent = "–";
+      document.getElementById("oeeValue").textContent = "–";
+
+      document.getElementById("oeeInsightBox").textContent =
+        "Feed in your line data and ChainIQ will decompose OEE into its three loss buckets, highlighting whether downtime, speed loss, or scrap is your main improvement opportunity.";
+    }
+
+    /* ---------- Deliver tab logic ---------- */
+    function parseModes() {
+      const rows = document.querySelectorAll(".mode-row");
+      const modes = [];
+
+      rows.forEach(row => {
+        const name = row.querySelector('[data-field="name"]').value.trim();
+        const cost = parseFloat(row.querySelector('[data-field="cost"]').value);
+        const lead = parseFloat(row.querySelector('[data-field="lead"]').value);
+        const rel = parseFloat(row.querySelector('[data-field="rel"]').value);
+
+        if (!name) return;
+        if (isNaN(cost) || isNaN(lead) || isNaN(rel)) return;
+
+        modes.push({ name, cost, lead, rel });
+      });
+
+      return modes;
+    }
+
+    function computeTransport() {
+      const modes = parseModes();
+      const bestNameEl = document.getElementById("bestModeName");
+      const bestScoreEl = document.getElementById("bestModeScore");
+      const avgScoreEl = document.getElementById("avgModeScore");
+      const costSpanEl = document.getElementById("modeCostSpan");
+      const insightBox = document.getElementById("deliverInsightBox");
+
+      if (!modes.length) {
+        bestNameEl.textContent = "–";
+        bestScoreEl.textContent = "–";
+        avgScoreEl.textContent = "Avg: –";
+        costSpanEl.textContent = "Cost range: –";
+        insightBox.textContent =
+          "No valid mode data yet. Provide at least one row with cost, lead time, and reliability to score transport options.";
+        return;
+      }
+
+      const costs = modes.map(m => m.cost);
+      const leads = modes.map(m => m.lead);
+      const minCost = Math.min(...costs);
+      const maxCost = Math.max(...costs);
+      const minLead = Math.min(...leads);
+      const maxLead = Math.max(...leads);
+
+      const normalize = (v, min, max, invert = false) => {
+        if (max === min) return 1;
+        const t = (v - min) / (max - min);
+        return invert ? 1 - t : t;
+      };
+
+      const scored = modes.map(m => {
+        const costScore = normalize(m.cost, minCost, maxCost, true) * 100;
+        const leadScore = normalize(m.lead, minLead, maxLead, true) * 100;
+        const relScore = Math.min(Math.max(m.rel, 0), 100);
+
+        const util = 0.35 * costScore + 0.25 * leadScore + 0.4 * relScore;
+
+        return { ...m, costScore, leadScore, relScore, util };
+      });
+
+      scored.sort((a, b) => b.util - a.util);
+      const best = scored[0];
+      const avgUtil = mean(scored.map(m => m.util));
+
+      bestNameEl.textContent = best.name;
+      bestScoreEl.textContent = best.util.toFixed(1);
+      avgScoreEl.textContent = `Avg: ${avgUtil.toFixed(1)}`;
+      costSpanEl.textContent = `Cost range: ${minCost.toFixed(2)} – ${maxCost.toFixed(2)} per unit`;
+
+      const parts = [];
+
+      parts.push(
+        `${best.name} currently offers the best overall trade-off with a transport score of about ${best.util.toFixed(
+          1
+        )}, reflecting its balance of cost, lead time, and reliability.`
+      );
+
+      if (maxCost - minCost > 0) {
+        parts.push(
+          `Between the cheapest and most expensive modes, per-unit cost varies by roughly ${(maxCost - minCost).toFixed(
+            2
+          )}. This spread is important when volumes are high or margins are thin.`
+        );
+      }
+
+      const fastModes = scored.filter(m => m.lead <= minLead + 1);
+      if (fastModes.length > 0) {
+        const names = fastModes.map(m => m.name).join(", ");
+        parts.push(
+          `Modes like ${names} provide the fastest lead times and are candidates for urgent or high-value shipments where service matters more than cost.`
+        );
+      }
+
+      const cheapModes = scored.filter(m => m.cost <= minCost * 1.1);
+      if (cheapModes.length > 0) {
+        const names = cheapModes.map(m => m.name).join(", ");
+        parts.push(
+          `${names} are the most economical options and are well-suited to predictable, non-urgent flows or large batch replenishments.`
+        );
+      }
+
+      const highReliability = scored.filter(m => m.relScore >= 95);
+      if (highReliability.length) {
+        const names = highReliability.map(m => m.name).join(", ");
+        parts.push(
+          `High-reliability modes such as ${names} are strong candidates for critical customers, SLAs, or products with high stockout cost.`
+        );
+      }
+
+      parts.push(
+        "In a full ChainIQ deployment, these scores would feed into lane-level routing policies, cost-to-serve calculators, and simulations for disruption scenarios."
+      );
+
+      insightBox.textContent = parts.join(" ");
+    }
+
+    function resetTransport() {
+      const rows = document.querySelectorAll(".mode-row");
+      rows.forEach((row, idx) => {
+        const nameEl = row.querySelector('[data-field="name"]');
+        const costEl = row.querySelector('[data-field="cost"]');
+        const leadEl = row.querySelector('[data-field="lead"]');
+        const relEl = row.querySelector('[data-field="rel"]');
+
+        if (idx === 0) {
+          nameEl.value = "Road";
+          costEl.value = "4";
+          leadEl.value = "3";
+          relEl.value = "92";
+        } else if (idx === 1) {
+          nameEl.value = "Air";
+          costEl.value = "9";
+          leadEl.value = "1";
+          relEl.value = "97";
+        } else if (idx === 2) {
+          nameEl.value = "Ocean";
+          costEl.value = "2";
+          leadEl.value = "18";
+          relEl.value = "85";
+        } else {
+          nameEl.value = "";
+          costEl.value = "";
+          leadEl.value = "";
+          relEl.value = "";
+        }
+      });
+
+      document.getElementById("bestModeName").textContent = "–";
+      document.getElementById("bestModeScore").textContent = "–";
+      document.getElementById("avgModeScore").textContent = "Avg: –";
+      document.getElementById("modeCostSpan").textContent = "Cost range: –";
+      document.getElementById("deliverInsightBox").textContent =
+        "Populate cost, lead time, and reliability for each mode and run the analysis. ChainIQ will comment on express vs economical choices and the risk of relying solely on one mode.";
+    }
+
+    /* ---------- Finance tab logic ---------- */
+    function computeFinance() {
+      const price = parseFloat(document.getElementById("priceInput").value);
+      const varCost = parseFloat(document.getElementById("varCostInput").value);
+      const fixed = parseFloat(document.getElementById("fixedCostInput").value);
+      const demandUnits = parseFloat(document.getElementById("demandUnitsInput").value);
+
+      const unitMarginEl = document.getElementById("unitMarginValue");
+      const marginPctEl = document.getElementById("marginPercentValue");
+      const profitEl = document.getElementById("totalProfitValue");
+      const breakevenEl = document.getElementById("breakevenValue");
+      const insightBox = document.getElementById("financeInsightBox");
+
+      if (isNaN(price) || isNaN(varCost)) {
+        unitMarginEl.textContent = "–";
+        marginPctEl.textContent = "–";
+        profitEl.textContent = "–";
+        breakevenEl.textContent = "–";
+        insightBox.textContent = "Selling price and variable cost per unit are required to compute margin and break-even.";
+        return;
+      }
+
+      const unitMargin = price - varCost;
+      unitMarginEl.textContent = unitMargin.toFixed(2);
+
+      const marginPct = price > 0 ? (unitMargin / price) * 100 : null;
+      marginPctEl.textContent = marginPct !== null ? marginPct.toFixed(1) + "%" : "–";
+
+      let profit = null;
+      if (!isNaN(fixed) && !isNaN(demandUnits)) {
+        profit = unitMargin * demandUnits - fixed;
+      }
+      profitEl.textContent = profit !== null ? profit.toFixed(2) : "–";
+
+      let breakeven = null;
+      if (!isNaN(fixed) && unitMargin > 0) {
+        breakeven = fixed / unitMargin;
+      }
+      breakevenEl.textContent = breakeven !== null ? breakeven.toFixed(0) : "–";
+
+      const parts = [];
+
+      parts.push(
+        `Unit margin is ${unitMargin.toFixed(2)} per unit, corresponding to a margin of ${
+          marginPct !== null ? marginPct.toFixed(1) + "%" : "N/A"
+        } on selling price.`
+      );
+
+      if (breakeven !== null) {
+        parts.push(`You need roughly ${breakeven.toFixed(0)} units in the period to cover fixed cost.`);
+      } else {
+        parts.push("Break-even volume cannot be computed if unit margin is zero or negative.");
+      }
+
+      if (profit !== null) {
+        if (profit > 0) {
+          parts.push(
+            `At the entered demand of ${demandUnits.toFixed(0)} units, the product line is profitable with an estimated profit of ${profit.toFixed(
+              2
+            )}.`
+          );
+        } else if (profit < 0) {
+          parts.push(
+            `At the entered demand of ${demandUnits.toFixed(
+              0
+            )} units, the product line is loss-making. You are operating below break-even or margins are too thin.`
+          );
+        } else {
+          parts.push("At this demand level, you are right at break-even — any drop in volume or margin will push you into loss.");
+        }
+      }
+
+      if (marginPct !== null) {
+        if (marginPct < 15) {
+          parts.push(
+            "Margin percentage is relatively low, meaning supply chain variability (expedites, scrap, rework) can quickly erode profitability."
+          );
+        } else if (marginPct > 35) {
+          parts.push(
+            "This is a margin-rich product, which can justify premium service levels or strategic stocking if demand variability is high."
+          );
+        }
+      }
+
+      insightBox.textContent = parts.join(" ");
+    }
+
+    function resetFinance() {
+      document.getElementById("priceInput").value = "";
+      document.getElementById("varCostInput").value = "";
+      document.getElementById("fixedCostInput").value = "";
+      document.getElementById("demandUnitsInput").value = "";
+
+      document.getElementById("unitMarginValue").textContent = "–";
+      document.getElementById("marginPercentValue").textContent = "–";
+      document.getElementById("totalProfitValue").textContent = "–";
+      document.getElementById("breakevenValue").textContent = "–";
+
+      document.getElementById("financeInsightBox").textContent =
+        "Once you compute the profit model, ChainIQ will comment on whether your product is margin-rich, how sensitive profit is to volume, and whether fixed cost looks aggressive relative to contribution.";
+    }
+
+    /* ---------- Tab switching ---------- */
+    function setupTabs() {
+      const tabButtons = document.querySelectorAll("[data-tab]");
+      const sections = {
+        plan: document.getElementById("planSection"),
+        source: document.getElementById("sourceSection"),
+        make: document.getElementById("makeSection"),
+        deliver: document.getElementById("deliverSection"),
+        finance: document.getElementById("financeSection"),
+      };
+
+      function activateTab(tab) {
+        tabButtons.forEach(btn => {
+          const btnTab = btn.getAttribute("data-tab");
+          if (btnTab === tab) {
+            btn.classList.add("pill-tab-active");
+            btn.classList.remove("pill-tab-inactive", "bg-transparent");
+          } else {
+            btn.classList.remove("pill-tab-active");
+            btn.classList.add("pill-tab-inactive");
+            btn.classList.add("bg-transparent");
+          }
+        });
+
+        Object.entries(sections).forEach(([name, el]) => {
+          if (!el) return;
+          el.classList.toggle("hidden", name !== tab);
+        });
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const tab = btn.getAttribute("data-tab");
+          activateTab(tab);
+        });
+      });
+
+      // default
+      activateTab("plan");
+    }
+
+    /* ---------- Event bindings ---------- */
+    // Plan
+    document.getElementById("computeBtn").addEventListener("click", computeAll);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+    document.getElementById("analyzeBtn").addEventListener("click", computeAll);
+
+    // Source
+    document.getElementById("computeSuppliersBtn").addEventListener("click", scoreSuppliers);
+    document.getElementById("resetSuppliersBtn").addEventListener("click", resetSuppliers);
+
+    // Make
+    document.getElementById("computeOeeBtn").addEventListener("click", computeOee);
+    document.getElementById("resetOeeBtn").addEventListener("click", resetOee);
+
+    // Deliver
+    document.getElementById("computeTransportBtn").addEventListener("click", computeTransport);
+    document.getElementById("resetTransportBtn").addEventListener("click", resetTransport);
+
+    // Finance
+    document.getElementById("computeFinanceBtn").addEventListener("click", computeFinance);
+    document.getElementById("resetFinanceBtn").addEventListener("click", resetFinance);
+
+    // Tabs
+    setupTabs();
+  </script>
+</body>
+</html>
