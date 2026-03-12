@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChainIQ | Enterprise Supply Chain Intelligence</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --accent: #14b8a6;
+      --accent-glow: rgba(20, 184, 166, 0.3);
+      --bg: #020617;
+      --panel: rgba(15, 23, 42, 0.6);
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(15, 118, 110, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.1) 0px, transparent 50%);
+      color: #f1f5f9;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    /* Polished Glassmorphism */
+    .glass-panel {
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      transition: border-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(20, 184, 166, 0.4);
+    }
+
+    /* Input Styling */
+    .input-field {
+      background: rgba(2, 6, 23, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+      outline: none;
+    }
+
+    /* Tab Animations */
+    .tab-transition {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .hidden {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    /* KPI Highlights */
+    .kpi-border {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-border::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent);
+    }
+
+    .kpi-amber::after { background: #f59e0b; }
+    .kpi-sky::after { background: #0ea5e9; }
+    .kpi-fuchsia::after { background: #d946ef; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="h-10 w-10 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20">
+          <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white leading-none">ChainIQ</h1>
+          <span class="text-[10px] uppercase tracking-widest text-teal-500 font-bold">Supply Intelligence</span>
+        </div>
+      </div>
+
+      <nav class="hidden lg:flex items-center bg-slate-900/50 rounded-full p-1 border border-slate-800">
+        <button data-tab="plan" class="tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-teal-400 bg-teal-500/10">Plan</button>
+        <button data-tab="source" class="tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white">Source</button>
+        <button data-tab="make" class="tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white">Make</button>
+        <button data-tab="deliver" class="tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white">Deliver</button>
+        <button data-tab="finance" class="tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white">Finance</button>
+      </nav>
+
+      <div class="flex items-center gap-4 text-xs">
+        <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+          </span>
+          <span class="text-slate-400 font-medium">Node: North_America_HQ</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    
+    <div id="sectionTitle" class="mb-8">
+      <div class="flex items-center gap-2 text-teal-500 mb-1">
+        <span class="h-px w-8 bg-teal-500/50"></span>
+        <span class="text-[10px] font-bold uppercase tracking-widest">Operational Core</span>
+      </div>
+      <h2 class="text-3xl font-bold text-white tracking-tight">Demand & Inventory</h2>
+      <p class="text-slate-400 text-sm mt-1 max-w-2xl">Manage cyclic demand variability and optimize safety stock thresholds using continuous review logic.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <div class="lg:col-span-4 space-y-6">
+        
+        <div id="planSection" class="section-content space-y-6">
+          <div class="glass-panel rounded-2xl p-6">
+            <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <svg class="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Demand Parameters
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Historical Sequence</label>
+                <textarea id="demandInput" class="input-field w-full h-24 rounded-xl p-3 text-sm font-mono text-teal-100" placeholder="120, 145, 130..."></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Z-Score (95%=1.65)</label>
+                  <input id="zValueInput" type="number" step="0.01" class="input-field w-full rounded-xl p-3 text-sm" value="1.65">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Lead Time (P)</label>
+                  <input id="leadTimeInput" type="number" class="input-field w-full rounded-xl p-3 text-sm" value="3">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel rounded-2xl p-6">
+             <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+              <svg class="w-4 h-4 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Economic Order (EOQ)
+            </h3>
+            <div class="space-y-4">
+               <div>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Annual Demand</label>
+                <input id="annualDemandInput" type="number" class="input-field w-full rounded-xl p-3 text-sm" placeholder="e.g. 5000">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Order Cost (K)</label>
+                  <input id="orderingCostInput" type="number" class="input-field w-full rounded-xl p-3 text-sm">
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1.5 ml-1">Holding (h)</label>
+                  <input id="holdingCostInput" type="number" class="input-field w-full rounded-xl p-3 text-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button id="computeBtn" class="flex-1 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold py-3 rounded-xl transition shadow-lg shadow-teal-500/20 text-sm">Compute Strategy</button>
+            <button id="resetBtn" class="px-6 py-3 border border-slate-700 hover:bg-slate-800 rounded-xl text-sm transition text-slate-400">Reset</button>
+          </div>
+        </div>
+
+        <div id="sourceSection" class="section-content hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6">
+                <p class="text-slate-400 text-xs italic">Sourcing logic active. Edit supplier data in the main table.</p>
+            </div>
+        </div>
+        </div>
+
+      <div class="lg:col-span-8 space-y-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="glass-panel rounded-2xl p-5 kpi-border border-l-4">
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Forecast</p>
+            <p id="forecastValue" class="text-2xl font-bold text-white">–</p>
+            <div class="w-full bg-slate-800 h-1 mt-3 rounded-full overflow-hidden">
+                <div class="bg-teal-500 h-full w-2/3"></div>
+            </div>
+          </div>
+          <div class="glass-panel rounded-2xl p-5 kpi-border kpi-sky border-l-4">
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">EOQ Target</p>
+            <p id="eoqValue" class="text-2xl font-bold text-white">–</p>
+            <p class="text-[10px] text-sky-400 mt-2 font-medium">Economic Balance</p>
+          </div>
+          <div class="glass-panel rounded-2xl p-5 kpi-border kpi-amber border-l-4">
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Safety Stock</p>
+            <p id="safetyStockValue" class="text-2xl font-bold text-white">–</p>
+            <p class="text-[10px] text-amber-400 mt-2 font-medium">Risk Buffer</p>
+          </div>
+          <div class="glass-panel rounded-2xl p-5 kpi-border kpi-fuchsia border-l-4">
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Reorder Point</p>
+            <p id="ropValue" class="text-2xl font-bold text-white">–</p>
+            <p class="text-[10px] text-fuchsia-400 mt-2 font-medium">Trigger Level</p>
+          </div>
+        </div>
+
+        <div class="glass-panel rounded-3xl p-8 relative overflow-hidden">
+          <div class="absolute top-0 right-0 p-6 opacity-10">
+            <svg class="w-24 h-24 text-teal-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          </div>
+          
+          <div class="relative z-10">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="flex h-3 w-3 rounded-full bg-teal-500 ring-4 ring-teal-500/20"></span>
+              <h3 class="text-lg font-bold text-white tracking-tight">ChainIQ Insight Assistant</h3>
+            </div>
+            
+            <div id="insightBox" class="text-slate-300 leading-relaxed space-y-4 text-sm md:text-base">
+              <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl p-6">
+                Waiting for operational data... Input your demand history and policy parameters to generate an executive intelligence summary.
+              </div>
+            </div>
+
+            <div class="mt-8 flex items-center gap-4 border-t border-slate-800/50 pt-6">
+                <div class="flex -space-x-2">
+                    <div class="w-8 h-8 rounded-full border-2 border-slate-900 bg-teal-600 flex items-center justify-center text-[10px] font-bold">AI</div>
+                    <div class="w-8 h-8 rounded-full border-2 border-slate-900 bg-blue-600 flex items-center justify-center text-[10px] font-bold">ST</div>
+                </div>
+                <p class="text-xs text-slate-500">Processing using <span class="text-slate-300 font-mono">Neural_Optimizer_v4</span> and <span class="text-slate-300 font-mono">Statistical_Review</span></p>
+            </div>
+          </div>
+        </div>
+
+        <div id="dynamicTableArea" class="glass-panel rounded-2xl overflow-hidden hidden">
+            </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Visual Tab Management
+    const tabData = {
+        plan: { title: "Demand & Inventory", sub: "Operational Core", desc: "Manage cyclic demand variability and optimize safety stock thresholds." },
+        source: { title: "Supplier Integrity", sub: "Procurement Risk", desc: "Evaluate vendor performance across quality, lead time, and ESG metrics." },
+        make: { title: "Production OEE", sub: "Manufacturing Efficiency", desc: "Analyze Availability, Performance, and Quality to find bottleneck losses." },
+        deliver: { title: "Logistics Optimization", sub: "Fulfillment Strategy", desc: "Multi-modal transport trade-offs and cost-to-serve analysis." },
+        finance: { title: "Commercial Viability", sub: "Financial Intelligence", desc: "Unit economics and break-even simulation based on supply chain costs." }
+    };
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.section-content');
+    const sectionTitle = document.querySelector('#sectionTitle h2');
+    const sectionSub = document.querySelector('#sectionTitle span:last-child');
+    const sectionDesc = document.querySelector('#sectionTitle p');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-tab');
+            
+            // UI Toggle
+            tabBtns.forEach(b => b.className = "tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-slate-400 hover:text-white");
+            btn.className = "tab-btn px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 text-teal-400 bg-teal-500/10 shadow-sm";
+            
+            // Content Toggle
+            sections.forEach(s => s.classList.add('hidden'));
+            document.getElementById(`${target}Section`).classList.remove('hidden');
+
+            // Text Update
+            sectionTitle.innerText = tabData[target].title;
+            sectionSub.innerText = tabData[target].sub;
+            sectionDesc.innerText = tabData[target].desc;
+        });
+    });
+
+    // Helper: Generate Pretty Insight Cards
+    function wrapInsight(text) {
+        return `<div class="bg-slate-900/60 border border-teal-500/20 rounded-2xl p-6 shadow-inner transition-all duration-500 animate-in fade-in slide-in-from-bottom-2">
+                    <p class="text-slate-300">${text}</p>
+                </div>`;
+    }
+
+    // Logic Integration (Connecting your existing logic to the new UI)
+    document.getElementById("computeBtn").addEventListener("click", () => {
+        // (Execution of your existing computeAll logic goes here)
+        // Update the insight box with wrapInsight(yourGeneratedText)
+    });
+
+  </script>
+</body>
+</html>
